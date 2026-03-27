@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Навигатор ТЛМ | Robokassa</title>
+  <link rel="icon" type="image/png" href="v-rk-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:#525FFB; --blue-h:#3D49F0; --bg:#F2F5FA; --white:#FFF;
+      --ok:#0D9F6E; --ok-bg:#EAF8F2; --danger:#D93547; --danger-bg:#FFF1F3;
+      --amber:#A06A00; --amber-bg:#FFF8E6; --border:#E2E7F1; --border-s:#EDF1F8;
+      --text:#182033; --muted:#6B7394; --r:20px; --r-sm:14px;
+      --shadow:0 10px 30px rgba(29,37,74,0.08); --shadow-sm:0 4px 14px rgba(29,37,74,0.06);
+      --font:'Geologica',sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);padding:28px 20px 64px;-webkit-font-smoothing:antialiased}
+    .page{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+    
+    .brand-row{display:flex;align-items:center;justify-content:flex-start;margin-bottom:8px}
+    .brand-picture{display:block;line-height:0}
+    .brand-logo{width:168px;height:auto;display:block}
+    .hero{text-align:center}
+    .hero h1{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+    .hero p{font-size:14px;color:var(--muted);font-weight:500}
+    .badge-internal{display:flex;align-items:center;gap:8px;padding:9px 16px;background:rgba(217,53,71,.045);border:1px solid rgba(217,53,71,.16);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--danger)}
+    .card,.panel,.goal-card,.phrase-card,.finish-card,.crm-card,.secondary{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+    .card-title,.panel-sec-title,.block-title,.mini-title{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(320px,0.92fr) minmax(480px,1.28fr);gap:18px;align-items:start}
+    .left-col{display:flex;flex-direction:column;gap:10px}
+    .q-card{padding:14px 15px}
+    .q-head{display:flex;align-items:center;gap:10px;cursor:pointer}
+    .q-num{width:28px;height:28px;border-radius:999px;background:rgba(82,95,251,.1);color:var(--blue);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .q-label{font-size:14px;font-weight:700;flex:1}
+    .q-value{font-size:11px;color:var(--muted);max-width:42%;text-align:right}
+    .q-arrow{font-size:18px;color:var(--muted);transition:.2s}
+    .q-arrow.open{transform:rotate(90deg);color:var(--blue)}
+    .q-body{display:none;padding-top:12px}
+    .q-body.open{display:block}
+    .q-hint{font-size:11px;line-height:1.5;color:var(--muted);background:rgba(107,115,148,.06);border:1px solid var(--border-s);padding:8px 10px;border-radius:12px;margin-bottom:10px}
+    .q-hint.blue{background:rgba(82,95,251,.05);color:var(--blue)}
+    .q-hint.warn{background:rgba(160,106,0,.08);color:var(--amber)}
+    .opts{display:flex;flex-wrap:wrap;gap:7px}
+    .opt{padding:8px 10px;border:1px solid var(--border);border-radius:11px;background:#fff;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;transition:.18s;line-height:1.25}
+    .opt:hover{border-color:#cdd7ea;transform:translateY(-1px)}
+    .opt.active{background:rgba(82,95,251,.08);border-color:rgba(82,95,251,.35);color:var(--blue)}
+    .opt.green.active{background:var(--ok-bg);border-color:rgba(13,159,110,.28);color:var(--ok)}
+    .opt.amber.active{background:var(--amber-bg);border-color:rgba(160,106,0,.28);color:var(--amber)}
+    .subgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .mini-card{border:1px solid var(--border-s);border-radius:14px;padding:10px;background:rgba(107,115,148,.03)}
+    .mini-title{margin-bottom:8px}
+
+    .right-col{display:flex;flex-direction:column;gap:12px;position:sticky;top:18px;min-width:0}
+    .goal-card{padding:18px 20px}
+    .goal-title{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .goal-main{font-size:24px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;line-height:1.15}
+    .goal-sub{font-size:14px;color:var(--muted);line-height:1.55}
+    .panel{padding:20px 22px}
+    .panel-sec{margin-bottom:18px}
+    .panel-sec:last-child{margin-bottom:0}
+    .panel-divider{height:1px;background:var(--border);margin:14px 0}
+    .empty-hint{font-size:13px;color:var(--muted);line-height:1.65}
+    .portrait-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .ptag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px}
+    .ptag-blue{background:rgba(82,95,251,.09);color:var(--blue)}
+    .ptag-green{background:var(--ok-bg);color:var(--ok)}
+    .ptag-amber{background:var(--amber-bg);color:var(--amber)}
+    .ptag-muted{background:rgba(107,115,148,.09);color:var(--muted)}
+    .rec-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.62;color:var(--text);margin-bottom:8px}
+    .rec-item:last-child{margin-bottom:0}
+    .rec-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:6px;flex-shrink:0}
+    .rec-dot.green{background:var(--ok)}
+    .priority-box{border:1px solid var(--border-s);border-radius:14px;padding:14px;background:rgba(82,95,251,.03)}
+    .priority-main{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.45}
+    .priority-sub{font-size:13px;color:var(--muted);line-height:1.6}
+    .phrase-card,.finish-card,.crm-card,.secondary{padding:18px 20px}
+    .phrase-label,.finish-title,.crm-title,.secondary-title{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}
+    .phrase-label,.secondary-title{color:var(--blue)}
+    .phrase-text{font-size:14px;line-height:1.72;color:var(--text);font-style:italic}
+    .phrase-note{font-size:11px;color:var(--muted);margin-top:8px}
+    .finish-title{color:var(--danger)}
+    .finish-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.6;margin-bottom:8px}
+    .finish-check{width:18px;height:18px;border-radius:999px;background:rgba(13,159,110,.12);color:var(--ok);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .finish-warn{margin-top:8px;padding:9px 11px;border-radius:12px;background:rgba(217,53,71,.06);color:var(--danger);font-size:12px;font-weight:600;line-height:1.5}
+    .crm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+    .crm-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text);line-height:1.5}
+    .crm-box{width:14px;height:14px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:1px}
+    .tool-link{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;padding:13px 15px;border:1px solid var(--border);border-radius:12px;margin-top:8px;transition:.18s}
+    .tool-link:hover{border-color:rgba(82,95,251,.28);color:var(--blue)}
+    .secondary summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .secondary summary::-webkit-details-marker{display:none}
+    .secondary-body{margin-top:12px;display:grid;gap:10px}
+    .obj-item{border:1px solid var(--border-s);border-radius:14px;overflow:hidden}
+    .obj-head{padding:12px 14px;display:flex;justify-content:space-between;gap:10px;background:rgba(107,115,148,.03);font-size:13px;font-weight:600}
+    .obj-body{padding:12px 14px;border-top:1px solid var(--border-s)}
+    .obj-body p{font-size:12px;line-height:1.6;color:var(--text)}
+    .obj-body p + p{margin-top:8px}
+    .pill{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:rgba(82,95,251,.08);color:var(--blue);white-space:nowrap}
+    .footer-actions{display:flex;justify-content:center;margin-top:2px}
+    .reset-btn{border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer}
+    @media (max-width: 980px){.layout{grid-template-columns:1fr}.right-col{position:static}.subgrid,.crm-grid{grid-template-columns:1fr}}
+    @media (max-width: 768px){.brand-logo{width:32px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div class="brand-row">
+        <picture class="brand-picture">
+          <source media="(max-width: 768px)" srcset="icon_robokassa_black.png">
+          <img class="brand-logo" src="logo_robokassa_black.png" alt="Robokassa">
+        </picture>
+      </div>
+      <h1>Навигатор ТЛМ</h1>
+      <p>Короткая квалификация → релевантная презентация → следующий шаг → фиксация в CRM</p>
+    </div>
+
+    <div class="badge-internal">Внутренний инструмент отдела продаж • Упрощённая структура: главный сценарий звонка на 1 экране</div>
+
+    <div class="layout">
+      <div class="left-col">
+        <div class="card" style="padding:16px 18px">
+          <div class="card-title" style="margin-bottom:10px">Проверь до звонка</div>
+          <div class="crm-grid">
+            <div class="crm-item"><div class="crm-box"></div>Форма собственности уже указана?</div>
+            <div class="crm-item"><div class="crm-box"></div>Есть сайт / ссылка / соцсети?</div>
+            <div class="crm-item"><div class="crm-box"></div>Понятен тип бизнеса?</div>
+            <div class="crm-item"><div class="crm-box"></div>Понятно, что продаёт?</div>
+            <div class="crm-item"><div class="crm-box"></div>Видно, как хочет принимать оплату?</div>
+            <div class="crm-item"><div class="crm-box"></div>Анкета заполнена полностью?</div>
+          </div>
+        </div>
+
+        <div class="q-card card" id="qc1">
+          <div class="q-head" onclick="tog(1)">
+            <div class="q-num">1</div>
+            <div class="q-label">Этап клиента</div>
+            <div class="q-value" id="qv1"></div>
+            <div class="q-arrow open" id="qa1">›</div>
+          </div>
+          <div class="q-body open" id="qb1">
+            <div class="q-hint blue">Сначала пойми, на каком этапе он остановился. Это определяет весь разговор.</div>
+            <div class="opts">
+              <div class="opt" data-k="stage" data-v="auth">Только авторизовался</div>
+              <div class="opt" data-k="stage" data-v="anketa">Заполнил анкету</div>
+              <div class="opt" data-k="stage" data-v="site">Указал сайт / бизнес</div>
+              <div class="opt" data-k="stage" data-v="docs">Подал документы</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card card" id="qc2">
+          <div class="q-head" onclick="tog(2)">
+            <div class="q-num">2</div>
+            <div class="q-label">Портрет клиента</div>
+            <div class="q-value" id="qv2"></div>
+            <div class="q-arrow" id="qa2">›</div>
+          </div>
+          <div class="q-body" id="qb2">
+            <div class="q-hint">Объединяем форму собственности и тип бизнеса в один шаг, чтобы не дробить начало разговора.</div>
+            <div class="subgrid">
+              <div class="mini-card">
+                <div class="mini-title">Форма собственности</div>
+                <div class="opts">
+                  <div class="opt" data-k="own" data-v="ip">ИП</div>
+                  <div class="opt" data-k="own" data-v="ul">ЮЛ</div>
+                  <div class="opt" data-k="own" data-v="smz">СМЗ</div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-title">Тип бизнеса</div>
+                <div class="opts">
+                  <div class="opt" data-k="biz" data-v="shop">Интернет-магазин</div>
+                  <div class="opt" data-k="biz" data-v="info">Инфобизнес</div>
+                  <div class="opt" data-k="biz" data-v="service">Услуги</div>
+                  <div class="opt" data-k="biz" data-v="bot">Telegram / VK-бот</div>
+                  <div class="opt" data-k="biz" data-v="invoice">Счета</div>
+                  <div class="opt" data-k="biz" data-v="offline">Офлайн</div>
+                  <div class="opt" data-k="biz" data-v="mixed">Смешанный</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card card" id="qc3">
+          <div class="q-head" onclick="tog(3)">
+            <div class="q-num">3</div>
+            <div class="q-label">Что остановило клиента</div>
+            <div class="q-value" id="qv3"></div>
+            <div class="q-arrow" id="qa3">›</div>
+          </div>
+          <div class="q-body" id="qb3">
+            <div class="q-hint warn">Главный фокус звонка: сначала причина остановки, потом уже презентация.</div>
+            <div class="opts">
+              <div class="opt" data-k="barrier" data-v="tech">Не разобрался / завис на процессе</div>
+              <div class="opt" data-k="barrier" data-v="docs">Слишком много документов</div>
+              <div class="opt" data-k="barrier" data-v="competitor">Ушёл к конкуренту</div>
+              <div class="opt" data-k="barrier" data-v="forgot">Отвлёкся / забыл</div>
+              <div class="opt" data-k="barrier" data-v="commission">Комиссия выше ожиданий</div>
+              <div class="opt" data-k="barrier" data-v="irrelevant">Говорит «не актуально»</div>
+              <div class="opt" data-k="barrier" data-v="callback">Нет времени / перезвоните</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card card" id="qc4">
+          <div class="q-head" onclick="tog(4)">
+            <div class="q-num">4</div>
+            <div class="q-label">Касса и платежный сценарий</div>
+            <div class="q-value" id="qv4"></div>
+            <div class="q-arrow" id="qa4">›</div>
+          </div>
+          <div class="q-body" id="qb4">
+            <div class="q-hint">Сюда переносим всё, что влияет на основной продукт и кассовую ветку.</div>
+            <div class="subgrid">
+              <div class="mini-card">
+                <div class="mini-title">Как принимает оплату</div>
+                <div class="opts">
+                  <div class="opt" data-k="flow" data-v="site">На сайте</div>
+                  <div class="opt" data-k="flow" data-v="link">По ссылке</div>
+                  <div class="opt" data-k="flow" data-v="bot">Через бот</div>
+                  <div class="opt" data-k="flow" data-v="invoice">По счету</div>
+                  <div class="opt" data-k="flow" data-v="offline">Офлайн</div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-title">Касса / чеки</div>
+                <div class="opts">
+                  <div class="opt green" data-k="kassa" data-v="none">Кассы нет</div>
+                  <div class="opt" data-k="kassa" data-v="deciding">Решение не выбрано</div>
+                  <div class="opt" data-k="kassa" data-v="price">Сравнивает по цене</div>
+                  <div class="opt" data-k="kassa" data-v="marking">Есть маркировка</div>
+                  <div class="opt" data-k="kassa" data-v="ausn">АУСН</div>
+                  <div class="opt" data-k="kassa" data-v="own">Есть своя касса</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card card" id="qc5">
+          <div class="q-head" onclick="tog(5)">
+            <div class="q-num">5</div>
+            <div class="q-label">Потенциал допродаж</div>
+            <div class="q-value" id="qv5"></div>
+            <div class="q-arrow" id="qa5">›</div>
+          </div>
+          <div class="q-body" id="qb5">
+            <div class="q-hint">Объединяем средний чек, BNPL и инокарты в один слой. Это второй приоритет после ядра звонка.</div>
+            <div class="subgrid">
+              <div class="mini-card">
+                <div class="mini-title">Средний чек</div>
+                <div class="opts">
+                  <div class="opt" data-k="check" data-v="1">До 1 000</div>
+                  <div class="opt" data-k="check" data-v="3">До 3 000</div>
+                  <div class="opt amber" data-k="check" data-v="5">5–10k</div>
+                  <div class="opt amber" data-k="check" data-v="15">15k+</div>
+                  <div class="opt amber" data-k="check" data-v="60">60k+</div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-title">Триггеры роста</div>
+                <div class="opts">
+                  <div class="opt green" data-k="bnpl" data-v="yes">Есть BNPL-потенциал</div>
+                  <div class="opt" data-k="foreign" data-v="yes">Нужны инокарты</div>
+                  <div class="opt" data-k="foreign" data-v="maybe">Инокарты под вопросом</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <details class="secondary">
+          <summary>
+            <div>
+              <div class="secondary-title">Библиотека возражений</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Вынесена во второй слой, чтобы не перегружать главный сценарий звонка.</div>
+            </div>
+            <span class="pill">Открыть</span>
+          </summary>
+          <div class="secondary-body" id="objections-list"></div>
+        </details>
+      </div>
+
+      <div class="right-col">
+        <div class="goal-card">
+          <div class="goal-title">Цель звонка</div>
+          <div class="goal-main">Довести до первых 1 000 ₽ через Robokassa</div>
+          <div class="goal-sub">Сначала убрать барьер, потом предложить следующий лучший шаг. Всё на экране подчинено этой логике.</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-sec">
+            <div class="panel-sec-title">Портрет клиента</div>
+            <div id="portrait-out"><div class="empty-hint">Заполни 2–3 блока слева — портрет соберётся автоматически</div></div>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-sec">
+            <div class="panel-sec-title">Что делать сейчас</div>
+            <div id="priority-out"><div class="empty-hint">Появится основной фокус звонка</div></div>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-sec">
+            <div class="panel-sec-title">Что уточнить</div>
+            <div id="qs-out"><div class="empty-hint">Появятся вопросы по сценарию</div></div>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-sec">
+            <div class="panel-sec-title">Что предложить</div>
+            <div id="rec-out"><div class="empty-hint">Сначала собери картину слева</div></div>
+          </div>
+        </div>
+
+        <div class="phrase-card">
+          <div class="phrase-label">Как открыть разговор</div>
+          <div class="phrase-text" id="open-phrase-text">«[Имя], добрый день! Меня зовут [Имя], Robokassa. Вижу, что вы зарегистрировались у нас — хотел быстро понять, всё ли ок, и помочь, если что-то остановило. Есть буквально 3 минуты?»</div>
+          <div class="phrase-note">Сначала контакт и причина остановки. Не продавай с первой секунды.</div>
+        </div>
+
+        <div class="finish-card">
+          <div class="finish-title">Завершение разговора — обязательно</div>
+          <div id="finish-out">
+            <div class="finish-item"><span class="finish-check">✓</span>Подведи итог: что понял и что подходит клиенту</div>
+            <div class="finish-item"><span class="finish-check">✓</span>Назови конкретный следующий шаг</div>
+            <div class="finish-item"><span class="finish-check">✓</span>Зафиксируй, кто что делает после звонка</div>
+            <div class="finish-item"><span class="finish-check">✓</span>Уточни дату / время следующего касания</div>
+          </div>
+          <div class="finish-warn">Если следующий шаг не зафиксирован — разговор не завершён.</div>
+        </div>
+
+        <div class="crm-card">
+          <div class="crm-title">Что зафиксировать в CRM</div>
+          <div class="crm-grid" id="crm-out"></div>
+        </div>
+
+        <div class="crm-card">
+          <div class="crm-title">Открыть инструмент</div>
+          <a class="tool-link" href="https://rk-sales-dept.github.io/Sales-calculator/#bnpl" target="_blank">Калькулятор BNPL <span>↗</span></a>
+          <a class="tool-link" href="https://rk-sales-dept.github.io/RK-competitor/" target="_blank">Сравнение с конкурентами <span>↗</span></a>
+        </div>
+
+        <div class="footer-actions">
+          <button class="reset-btn" onclick="resetAll()">Сбросить сценарий</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const LABELS = {
+  stage:{auth:'Только авторизация',anketa:'Анкета',site:'Сайт / бизнес',docs:'Поданы документы'},
+  own:{ip:'ИП',ul:'ЮЛ',smz:'СМЗ'},
+  biz:{shop:'Интернет-магазин',info:'Инфобизнес',service:'Услуги',bot:'Telegram / VK-бот',invoice:'Счета',offline:'Офлайн',mixed:'Смешанный'},
+  barrier:{tech:'Не разобрался',docs:'Много документов',competitor:'Ушёл к конкуренту',forgot:'Отвлёкся',commission:'Комиссия',irrelevant:'Не актуально',callback:'Нет времени'},
+  flow:{site:'Сайт',link:'Ссылка',bot:'Бот',invoice:'Счета',offline:'Офлайн'},
+  kassa:{none:'Кассы нет',deciding:'Решение не выбрано',price:'Сравнивает по цене',marking:'Есть маркировка',ausn:'АУСН',own:'Есть своя касса'},
+  check:{'1':'до 1k','3':'до 3k','5':'5–10k','15':'15k+','60':'60k+'},
+  bnpl:{yes:'Есть BNPL-потенциал'},
+  foreign:{yes:'Нужны инокарты',maybe:'Инокарты под вопросом'}
+};
+
+const OBJECTIONS = [
+  {title:'«Ушёл к конкуренту»', tag:'Конкурент', logic:'Не спорь сразу. Выясни, что именно выбрал и за счёт чего решение показалось сильнее.', phrase:'«Понял. Подскажите, а что для вас стало решающим — скорость, комиссия, способы оплаты или что-то ещё? Я хочу честно сравнить именно по вашим приоритетам.»'},
+  {title:'«Много документов»', tag:'Процесс', logic:'Обычно за этим страх бюрократии или непонимание, что из списка реально нужно.', phrase:'«Какие именно документы показались лишними? Возможно, часть из них для вашей ситуации вообще не требуется — давайте быстро посмотрим.»'},
+  {title:'«Не актуально»', tag:'Риск', logic:'Самое опасное возражение. Нельзя закрывать звонок без причины и следующего шага.', phrase:'«Понял. Не актуально — потому что проект отложился, выбрали другое решение или что-то изменилось? Хочу правильно зафиксировать.»'},
+  {title:'«Перезвоните / пришлите»', tag:'Уход', logic:'Без конкретного времени это почти всегда потеря контакта.', phrase:'«Без проблем. Когда вам удобнее: завтра утром или после обеда? Зафиксирую конкретное время, чтобы не дёргать вас лишний раз.»'}
+];
+
+const S = {stage:'',own:'',biz:'',barrier:'',flow:'',kassa:'',check:'',bnpl:'',foreign:''};
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function tog(i){const body=document.getElementById('qb'+i);const arr=document.getElementById('qa'+i);body.classList.toggle('open');arr.classList.toggle('open');}
+
+function bindOptions(){
+  document.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const k=el.dataset.k,v=el.dataset.v;
+      document.querySelectorAll(`.opt[data-k="${k}"]`).forEach(x=>x.classList.remove('active'));
+      el.classList.add('active'); S[k]=v; update();
+    });
+  });
+}
+
+function getPortrait(){
+  const tags=[];
+  if(S.stage) tags.push({t:LABELS.stage[S.stage], c:'ptag-muted'});
+  if(S.own) tags.push({t:LABELS.own[S.own], c:'ptag-blue'});
+  if(S.biz) tags.push({t:LABELS.biz[S.biz], c:'ptag-blue'});
+  if(S.flow) tags.push({t:LABELS.flow[S.flow], c:'ptag-muted'});
+  if(S.kassa) tags.push({t:LABELS.kassa[S.kassa], c:['marking','ausn','none','deciding'].includes(S.kassa)?'ptag-green':'ptag-amber'});
+  if(S.check) tags.push({t:'Чек ' + LABELS.check[S.check], c:(+S.check>=5?'ptag-amber':'ptag-muted')});
+  if(S.bnpl==='yes') tags.push({t:'BNPL-потенциал', c:'ptag-green'});
+  if(S.foreign) tags.push({t:LABELS.foreign[S.foreign], c:'ptag-green'});
+  return tags;
+}
+
+function getPriority(){
+  if(!S.barrier) return {main:'Сначала выясни реальную причину остановки', sub:'Пока не выбран барьер, не уходи в подробную презентацию.'};
+  const priorities = {
+    tech:['Снять тревогу по процессу','Помоги пройти следующий шаг и покажи, что клиент застрял не из-за продукта, а из-за непонятного действия.'],
+    docs:['Разобрать, что именно лишнее','Скорее всего клиент боится бюрократии. Уточни конкретно, какие документы смутили.'],
+    competitor:['Понять критерий выбора','Не спорь “в лоб”, сначала узнай, что стало решающим при выборе конкурента.'],
+    forgot:['Вернуть в фокус','Здесь часто нет негативного отношения — просто доведи до следующего конкретного действия.'],
+    commission:['Сравнить не по цене, а по сценарию','Сначала пойми, с кем и по чему сравнивают, потом переводи разговор в ценность.'],
+    irrelevant:['Понять, что скрывается за “не актуально”','Это не финальный ответ. Нужна причина и следующий контакт.'],
+    callback:['Зафиксировать время, а не просто “перезвон”','Без конкретного времени разговор с высокой вероятностью теряется.']
+  };
+  const [main,sub] = priorities[S.barrier];
+  return {main,sub};
+}
+
+function getQs(){
+  const qs=[];
+  if(S.stage==='auth') qs.push('Уточни, новый это проект или уже действующий бизнес.');
+  if(['anketa','site','docs'].includes(S.stage)) qs.push('Подтверди уже заполненные данные вместо повторных вопросов.');
+  if(S.barrier==='competitor') qs.push('С кем сейчас сравнивает / уже работает клиент?');
+  if(S.barrier==='commission') qs.push('Что именно показалось высоким: комиссия, касса или совокупная стоимость?');
+  if(S.barrier==='irrelevant') qs.push('Почему стало неактуально: отложили проект, ушли к другому сервису или изменился формат бизнеса?');
+  if(S.kassa && ['none','deciding','price','marking','ausn'].includes(S.kassa)) qs.push('Как сейчас решается вопрос с чеками и выбрано ли кассовое решение?');
+  if(S.check && +S.check>=5) qs.push('Бывает ли, что клиентам тяжело оплатить сразу / есть брошенные корзины?');
+  if(S.foreign==='yes' || S.biz==='info' || S.biz==='bot') qs.push('Есть ли клиенты из-за рубежа или спрос на оплату иностранными картами?');
+  if(S.flow==='invoice' || S.biz==='service') qs.push('Оплата нужна по счету, по ссылке или нужен полноценный онлайн-сценарий?');
+  return [...new Set(qs)].slice(0,5);
+}
+
+function getRec(){
+  const rec=[];
+  rec.push({text:'Основной продукт — Robokassa', sub:'Веди разговор к запуску приёма платежей и первым 1 000 ₽.', green:true});
+  if(['marking','ausn','none','deciding'].includes(S.kassa) || S.own==='ul') rec.push({text:'Robokassa ONLINE', sub:'Подсвети надёжную кассовую схему: ОФД, чеки от имени компании, масштабируемость.'});
+  if(S.kassa==='price' || S.kassa==='own') rec.push({text:'Робочеки / альтернативная кассовая ветка', sub:'Но сначала уточни, с чем сравнивают и что именно считают дорогим.'});
+  if((S.check && +S.check>=5) || S.bnpl==='yes' || ['shop','info'].includes(S.biz)) rec.push({text:'BNPL / Яндекс Сплит', sub:'Подавай как инструмент роста конверсии и снижения барьера оплаты.'});
+  if(S.foreign==='yes' || ['info','bot'].includes(S.biz) || ['site','bot'].includes(S.flow)) rec.push({text:'Инокарты', sub:'Подсвети, если есть онлайн-аудитория, digital или зарубежные клиенты.'});
+  return rec;
+}
+
+function getOpenPhrase(){
+  if(S.stage==='docs') return '«Вижу, что вы уже дошли до документов. Хотел быстро уточнить, всё ли ок и не застряли ли на каком-то шаге — если да, помогу сейчас за пару минут.»';
+  if(S.barrier==='competitor') return '«Вижу, что вы уже изучали подключение. Хотел уточнить, что стало решающим в выборе другого варианта, чтобы честно сравнить именно по вашему сценарию.»';
+  if(S.barrier==='irrelevant') return '«Подскажите, пожалуйста, правильно ли понимаю, что вопрос отложился? Хочу понять контекст и не тревожить вас лишний раз.»';
+  return '«[Имя], добрый день! Меня зовут [Имя], Robokassa. Вижу, что вы зарегистрировались у нас — хотел быстро понять, всё ли ок, и помочь, если что-то остановило. Есть буквально 3 минуты?»';
+}
+
+function getFinish(){
+  const items=[];
+  items.push('Подведи итог: коротко назови, что сейчас подходит клиенту.');
+  if(getRec().some(x=>x.text.includes('Robokassa ONLINE'))) items.push('Согласуй, возвращается ли клиент к выбору кассового решения и в какой срок.');
+  if(getRec().some(x=>x.text.includes('BNPL'))) items.push('Если тема BNPL зашла, договорись, кто и когда смотрит калькулятор / цифры по конверсии.');
+  if(S.barrier==='callback') items.push('Назови конкретную дату и время повторного контакта, не оставляй “перезвоните потом”.');
+  else items.push('Зафиксируй конкретный следующий шаг: анкета, документы, повторный созвон, просмотр кассы или расчёта.');
+  items.push('Скажи, что делаешь ты со своей стороны: отправляешь материал, возвращаешься в срок, помогаешь с шагом.');
+  return items;
+}
+
+function getCRM(){
+  const items=['Этап клиента','Форма собственности','Тип бизнеса','Причина остановки'];
+  if(S.kassa) items.push('Статус вопроса с кассой');
+  if(getRec().some(x=>x.text.includes('BNPL'))) items.push('Интерес к BNPL / Сплит');
+  if(S.foreign) items.push('Потребность в инокартах');
+  if(S.barrier==='competitor') items.push('С кем сравнивает / текущий провайдер');
+  items.push('Следующий шаг','Срок следующего касания');
+  return items;
+}
+
+function renderPortrait(){
+  const el=document.getElementById('portrait-out'); const tags=getPortrait();
+  el.innerHTML = !tags.length ? '<div class="empty-hint">Заполни блоки слева</div>' : '<div class="portrait-tags">'+tags.map(t=>`<span class="ptag ${t.c}">${esc(t.t)}</span>`).join('')+'</div>';
+}
+function renderPriority(){ const p=getPriority(); document.getElementById('priority-out').innerHTML = `<div class="priority-box"><div class="priority-main">${esc(p.main)}</div><div class="priority-sub">${esc(p.sub)}</div></div>`; }
+function renderList(id, arr, green=false){ document.getElementById(id).innerHTML = !arr.length ? '<div class="empty-hint">Появится по мере заполнения</div>' : arr.map(x=>`<div class="rec-item"><span class="rec-dot${green?' green':''}"></span><div>${typeof x==='string'?esc(x):`<div style="font-weight:700;font-size:12px">${esc(x.text)}</div>${x.sub?`<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.sub)}</div>`:''}`}</div></div>`).join(''); }
+function renderPhrase(){ document.getElementById('open-phrase-text').textContent = getOpenPhrase(); }
+function renderFinish(){ const items=getFinish(); document.getElementById('finish-out').innerHTML = items.map(t=>`<div class="finish-item"><span class="finish-check">✓</span>${esc(t)}</div>`).join(''); }
+function renderCRM(){ document.getElementById('crm-out').innerHTML = getCRM().map(t=>`<div class="crm-item"><div class="crm-box"></div>${esc(t)}</div>`).join(''); }
+function renderValues(){
+  document.getElementById('qv1').textContent = S.stage ? LABELS.stage[S.stage] : '';
+  document.getElementById('qv2').textContent = [S.own&&LABELS.own[S.own], S.biz&&LABELS.biz[S.biz]].filter(Boolean).join(' • ');
+  document.getElementById('qv3').textContent = S.barrier ? LABELS.barrier[S.barrier] : '';
+  document.getElementById('qv4').textContent = [S.flow&&LABELS.flow[S.flow], S.kassa&&LABELS.kassa[S.kassa]].filter(Boolean).join(' • ');
+  document.getElementById('qv5').textContent = [S.check&&('Чек '+LABELS.check[S.check]), S.bnpl&&LABELS.bnpl[S.bnpl], S.foreign&&LABELS.foreign[S.foreign]].filter(Boolean).join(' • ');
+}
+function renderObjections(){
+  document.getElementById('objections-list').innerHTML = OBJECTIONS.map(o=>`<div class="obj-item"><div class="obj-head"><span>${esc(o.title)}</span><span class="pill">${esc(o.tag)}</span></div><div class="obj-body"><p><strong>Что за этим стоит:</strong> ${esc(o.logic)}</p><p><strong>Как остаться в разговоре:</strong> ${esc(o.phrase)}</p></div></div>`).join('');
+}
+function update(){ renderValues(); renderPortrait(); renderPriority(); renderList('qs-out', getQs()); renderList('rec-out', getRec()); renderPhrase(); renderFinish(); renderCRM(); }
+function resetAll(){ Object.keys(S).forEach(k=>S[k]=''); document.querySelectorAll('.opt').forEach(x=>x.classList.remove('active')); update(); }
+
+bindOptions(); renderObjections(); update();
+</script>
+</body>
+</html>
