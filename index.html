@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <script src="auth-guard.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Навигатор ТЛМ | Robokassa</title>
@@ -356,7 +355,6 @@
             <div class="ilist mt8">
               <div class="ii"><span class="dot"></span><strong>15+ способов оплаты</strong> по одному договору — карты, СБП, SberPay, MirPay, T-Pay, Яндекс Пэй и другие</div>
               <div class="ii"><span class="dot"></span><strong>130+ интеграций</strong> с CMS, CRM, API, Telegram-боты</div>
-              <div class="ii"><span class="dot"></span>Отправка чеков <strong>уже включена в тариф</strong> — доплата не нужна</div>
               <div class="ii"><span class="dot"></span>Подключение за <strong>1 рабочий день</strong></div>
               <div class="ii"><span class="dot"></span><strong>НДС не облагается</strong> — это реальная экономия по сравнению с банковским эквайрингом</div>
               <div class="ii"><span class="dot"></span><strong>23 года</strong> на рынке · <strong>250 000+</strong> клиентов · доступность <strong>99,99%</strong></div>
@@ -622,12 +620,7 @@
           <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Все чеки от имени компании / ИП клиента</div>
           <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span><strong>ОФД включён бесплатно</strong> на весь срок аренды</div>
           <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Поддерживает ФФД 1.2, АУСН, все системы налогообложения</div>
-          <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span><strong>Маркировка / Честный ЗНАК</strong> — говори только если у клиента есть</div>
-          <div style="margin:4px 0 2px 10px;padding:8px 10px;background:rgba(82,95,251,0.06);border-radius:8px;display:flex;flex-direction:column;gap:4px">
-            <div style="font-size:11px;color:var(--text)">✓ Данные уходят в ЧЗ <strong>автоматически</strong></div>
-            <div style="font-size:11px;color:var(--text)">✓ Вывод из оборота — из кабинета мерчанта, без доп. действий</div>
-            <div style="font-size:11px;color:var(--muted);font-style:italic">У Робочеков — только вручную через ЧЗ отдельно →&nbsp;ONLINE</div>
-          </div>
+          <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Маркировка / Честный ЗНАК — говори только если у клиента есть</div>
           <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>При переходе из другого сервиса — <strong>регистрация в ФНС бесплатно</strong></div>
         </div>
         <div style="margin-top:14px;padding:10px 14px;background:rgba(82,95,251,0.08);border-radius:10px">
@@ -661,13 +654,6 @@
           <div class="kassa-points" style="gap:6px">
             <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Полностью бесплатно — без покупки оборудования</div>
             <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Агентские чеки через облачную кассу Robokassa</div>
-          <div class="kassa-point" style="font-size:12px"><span class="kp-dot" style="background:var(--amber)"></span><strong>Маркировка — ограниченная поддержка</strong></div>
-          <div style="margin:4px 0 2px 10px;padding:8px 10px;background:var(--amber-bg);border-radius:8px;display:flex;flex-direction:column;gap:4px">
-            <div style="font-size:11px;color:var(--text)">✓ Код маркировки можно передать в чек</div>
-            <div style="font-size:11px;color:var(--amber)">✕ В Честный ЗНАК автоматически не уходит</div>
-            <div style="font-size:11px;color:var(--amber)">✕ Нужно вручную вводить в ЧЗ и выводить из оборота отдельно</div>
-            <div style="font-size:11px;color:var(--muted);font-style:italic">При любом объёме маркированных товаров → предлагай ONLINE</div>
-          </div>
             <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Для СМЗ и ИП на НПД — Робочеки СМЗ (по 422-ФЗ)</div>
             <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Предлагать только после «с чем сравниваете?»</div>
             <div class="kassa-point" style="font-size:12px"><span class="kp-dot"></span>Рекомендовать потом перейти на ONLINE</div>
@@ -763,7 +749,7 @@ var STAGE_DATA = {
     discovery_hint: { cls:'hint-blue', t:'О клиенте ничего не знаем — задай все базовые вопросы. Не пропускай выявление.' },
     discovery_qs: ['Чем занимаетесь, что планируете продавать?','Как планируете принимать оплату — сайт, ссылка, бот?','Проект новый или уже работаете?','Примерный средний чек?','Работали раньше с платёжными сервисами?'],
     discovery_phrase: '«Хочу убедиться что смогу помочь именно вам — расскажите немного о вашем бизнесе?»',
-    pres_accent: { cls:'hint-blue', t:'Клиент на старте — акцент на простоте и скорости. Подключение бесплатно, 15+ методов оплаты по одному договору. По срокам: стандартно рассмотрение занимает 1–3 рабочих дня — не обещай «к завтрашнему утру», особенно в периоды высокой загрузки.' },
+    pres_accent: { cls:'hint-blue', t:'Клиент на старте — акцент на простоте и скорости. Подключение за 1 день, 0 ₽ за подключение, 15+ методов оплаты по одному договору.' },
     kassa_note: { cls:'hint-blue', t:'Скорее всего о кассе не думал — хорошая возможность рассказать первым. Начни с Robokassa ONLINE, Робочеки только если скажет «дорого».' },
   },
   anketa: {
@@ -805,13 +791,13 @@ var KASSA_HINTS = {
   has:      { cls:'hint-ok',    t:'Касса уже есть — уточни какая и устраивает ли. Предложи ONLINE если есть проблемы с текущей.' },
   knows:    { cls:'hint-amber', t:'Знает Робочеки — хорошо. Расскажи преимущества ONLINE как следующего шага.' },
   price:    { cls:'hint-warn',  t:'Говорит «дорого» — сначала уточни с чем сравнивает. Только потом предлагай Робочеки как старт.' },
-  marking:  { cls:'hint-blue',  t:'Есть маркировка — это сильный аргумент для Robokassa ONLINE. Объясни разницу: RK Online выводит данные маркировки в Честный ЗНАК автоматически — прямо из кабинета мерчанта, без доп. действий. Робочеки — агентское решение: код маркировки можно передать в чек вручную, но в ЧЗ он автоматически не попадает. Мерчанту придётся отдельно вводить маркировку в ЧЗ и вручную выводить товар из оборота. При любом объёме продаж это критичная операционная нагрузка — ONLINE безальтернативен.' },
-  ausn:     { cls:'hint-blue',  t:'АУСН — Robokassa ONLINE поддерживает. Это сильный аргумент, используй его.' },
+  marking:  { cls:'hint-blue',  t:'Есть маркировка — это прямой аргумент для Robokassa ONLINE. Только она полностью поддерживает.' },
+  ausn:     { cls:'hint-blue',  t:'АУСН — Robokassa ONLINE поддерживает полностью. Это сильный аргумент, используй его.<br><br><strong>Позиция 1 — основная:</strong> Для АУСН рекомендуем Robokassa ONLINE. Решение полностью синхронизировано с логикой режима — ФНС автоматически и безошибочно учтёт все доходы. Клиенту не нужно ничего контролировать вручную. Просто и безопасно.<br><br><strong>Позиция 2 — если клиент настаивает на Робочеках:</strong> Технически и юридически это возможно. Но важно предупредить: клиенту придётся самостоятельно контролировать налоговую базу и корректировать её в ЛК ФНС (вычитать комиссию и т.д.) — автоматический расчёт по агентским чекам может давать ошибки. Если готов к ручному контролю — рабочий вариант.<br><br><strong>Позиция 3 — если вопрос про письма от ФНС:</strong> Такие случаи бывали — клиентам на Робочеках приходили рекомендации перейти на собственную кассу. Не нарушение закона, но инспекторам проще когда касса принадлежит самому предпринимателю. Robokassa ONLINE гарантированно избавит от таких писем.' },
 };
 
 // ── Контекст презентации по типу бизнеса ───────────────────────────
 var PRES_CONTEXT = {
-  shop:    ['BNPL: Подели, Мокка, Яндекс Сплит — рост конверсии при чеке от 5 тыс. (акция: скидка до 10% покупателям до 17.04.2026)', 'Рассрочка и кредит — лимит до 500 000 ₽', 'Все pay-методы: СБП, MirPay, SberPay, T-Pay, Яндекс Пэй', 'Тариф от 1,8%, чеки включены в тариф'],
+  shop:    ['BNPL: Подели, Мокка, Яндекс Сплит — рост конверсии при чеке от 5 тыс. (акция: скидка до 10% покупателям до 17.04.2026)', 'Рассрочка и кредит — лимит до 500 000 ₽', 'Все pay-методы: СБП, MirPay, SberPay, T-Pay, Яндекс Пэй'],
   info:    ['Инокарты (Visa, Mastercard, UnionPay) — если есть зарубежные клиенты', 'Яндекс Сплит / BNPL — при высоком чеке за курс (акция до 17.04.2026)', 'Рекурренты — автосписание для подписок без повторного ввода карты', 'Интеграция с GetCourse, Tilda, ботами', 'Тариф от 1,8%, подключение 0 ₽'],
   service: ['Выставление счетов и оплата по ссылке', 'СБП — снижает комиссию для клиентов', 'Интеграция с CRM'],
   bot:     ['API и готовые SDK — Python, PHP, Node.js', 'Инокарты если есть зарубежные клиенты', 'BNPL если чек от 5 тыс.'],
